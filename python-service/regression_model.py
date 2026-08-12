@@ -3,18 +3,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
 import os
+import joblib
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(script_dir, "house-prices-advanced-regression-techniques", "train.csv")
 df = pd.read_csv(csv_path)
 
 # trim to use selected columns
-selected_columns = ["YrSold", "MSSubClass", "MSZoning", "LotArea", "LotShape", "Neighborhood", "OverallQual", "OverallCond", "YearBuilt", "BedroomAbvGr", "KitchenQual", "SalePrice"]
+selected_columns = ["MSSubClass", "MSZoning", "LotArea", "LotShape", "Neighborhood", "OverallQual", "OverallCond", "YearBuilt", "BedroomAbvGr", "KitchenQual", "SalePrice"]
 trimmed_df = df[selected_columns]
 
-# All data engineering
-trimmed_df["HouseAge"] = trimmed_df["YrSold"] - trimmed_df["YearBuilt"]
-# 
 df_encoded = pd.get_dummies(trimmed_df, columns=["MSZoning", "LotShape", "Neighborhood", "KitchenQual"])
 
 # Features and target
@@ -36,3 +34,6 @@ r2 = r2_score(y_test, predictions)
 
 print(f"Mean Absolute Error: £{mae:.2f}")
 print(f"R² Score: {r2:.2f}")
+
+joblib.dump(model, "house_price_model.pkl")
+joblib.dump(X_train.columns.tolist(), "model_columns.pkl")
