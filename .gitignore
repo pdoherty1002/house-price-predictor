@@ -4,10 +4,8 @@ python-service/__pycache__/
 *.pyc
 
 # .NET / Blazor
-dotnet-api/bin/
-dotnet-api/obj/
-blazor-app/bin/
-blazor-app/obj/
+**/bin/
+**/obj/
 
 # Editor
 .vscode/
