@@ -34,12 +34,15 @@ cd blazor-app
 dotnet run
 ```
 
-Then open the Blazor app's URL in a browser and navigate to `/predict`.
+Then open the Blazor app's URL in a browser — the prediction form is the homepage.
+
+## Dependencies
+
+- **Python** (`python-service`): see `requirements.txt` — install with `pip install -r requirements.txt`
+- **.NET** (`dotnet-api`, `blazor-app`): dependencies are managed via each project's `.csproj` file (`<PackageReference>` entries) — no separate requirements file needed. Running `dotnet run` or `dotnet build` restores them automatically.
 
 ## Status
 
 Working end-to-end — a real prediction flows through all three layers and displays on the page.
 
-This is a **work in progress**. Current known limitations and next steps:
-- The form currently requires all 10 feature values to be typed in manually — too much friction for a quick demo. Next step is adding sensible filler/default values and converting the categorical fields (zoning, neighborhood, etc.) into dropdowns instead of free text.
-- Visual styling is minimal — functional but not yet polished.
+The front-end is a single-page app. Of the model's 10 features, 6 are user-adjustable (lot size, overall quality, overall condition, year built, bedrooms, kitchen quality) via dropdowns and a date picker, while the remaining 4 (dwelling type, zoning, neighborhood, lot shape) are fixed to sensible, typical defaults — keeping the demo quick and approachable rather than requiring 10 fields to be filled in manually.
