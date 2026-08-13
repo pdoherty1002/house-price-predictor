@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,28 +16,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapPost("/predict", async (HouseFeatures features) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    try{
+    using var httpClient = new HttpClient();
+    var options = new JsonSerializerOptions { PropertyNamingPolicy = null };
+    var response = await httpClient.PostAsJsonAsync("http://127.0.0.1:8000/predict", features, options);
+    var result = await response.Content.ReadAsStringAsync();
+    return result;
+    }
+    catch(Exception e)
+    {
+        return $"Something went wrong: {e.Message}";
+    }
+});
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record HouseFeatures(int MSSubClass, string MSZoning, int LotArea, string LotShape, string Neighborhood, int OverallQual, int OverallCond, int YearBuilt, int BedroomAbvGr, string KitchenQual);
