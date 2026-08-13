@@ -1,0 +1,100 @@
+@page "/predict"
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+@using Shared
+
+<PageTitle>House Price Prediction</PageTitle>
+
+<h1>House Price Prediction</h1>
+
+<div>
+    <label>MSSubClass:</label>
+    <input type="number" @bind="msSubClass" />
+</div>
+<div>
+    <label>msZoning:</label>
+    <input type="text" @bind="msZoning" />
+</div>
+<div>
+    <label>lotArea:</label>
+    <input type="number" @bind="lotArea" />
+</div>
+<div>
+    <label>lotShape:</label>
+    <input type="text" @bind="lotShape" />
+</div>
+<div>
+    <label>neighborhood:</label>
+    <input type="text" @bind="neighborhood" />
+</div>
+<div>
+    <label>overallQual:</label>
+    <input type="number" @bind="overallQual" />
+</div>
+<div>
+    <label>overallCond:</label>
+    <input type="number" @bind="overallCond" />
+</div>
+<div>
+    <label>yearBuilt:</label>
+    <input type="number" @bind="yearBuilt" />
+</div>
+<div>
+    <label>bedroomAbvGr:</label>
+    <input type="number" @bind="bedroomAbvGr" />
+</div>
+<div>
+    <label>kitchenQual:</label>
+    <input type="text" @bind="kitchenQual" />
+</div>
+
+<button @onclick="HandleSubmit">Get Prediction</button>
+
+@if (predictedPrice != "")
+{
+    <p>Predicted price: @predictedPrice</p>
+}
+
+@code {
+    private int msSubClass;
+    private string msZoning = "";
+    private int lotArea;
+    private string lotShape = "";
+    private string neighborhood = "";
+    private int overallQual;
+    private int overallCond;
+    private int yearBuilt;
+    private int bedroomAbvGr;
+    private string kitchenQual = "";
+
+    private string predictedPrice = "";
+
+    public class PredictionResponse
+    {
+        public double predicted_price { get; set; }
+    }
+
+    private async Task HandleSubmit()
+    {
+
+        HouseFeatures dataToSend = new HouseFeatures
+        {
+            MSSubClass = msSubClass,
+            MSZoning = msZoning,
+            LotArea = lotArea,
+            LotShape = lotShape,
+            Neighborhood = neighborhood,
+            OverallQual = overallQual,
+            OverallCond = overallCond,
+            YearBuilt = yearBuilt,
+            BedroomAbvGr = bedroomAbvGr,
+            KitchenQual = kitchenQual
+        };
+
+        using var httpClient = new HttpClient();
+        var response = await httpClient.PostAsJsonAsync("http://localhost:5205/predict", dataToSend);
+        var predictionResult = await response.Content.ReadFromJsonAsync<PredictionResponse>();
+        predictedPrice = predictionResult?.predicted_price.ToString("C", new System.Globalization.CultureInfo("en-GB")) ??
+        "Error";
+    }
+}

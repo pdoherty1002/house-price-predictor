@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,5 +33,3 @@ app.MapPost("/predict", async (HouseFeatures features) =>
 });
 
 app.Run();
-
-record HouseFeatures(int MSSubClass, string MSZoning, int LotArea, string LotShape, string Neighborhood, int OverallQual, int OverallCond, int YearBuilt, int BedroomAbvGr, string KitchenQual);

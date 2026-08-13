@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="blazor-app/blazor-app.csproj" />
+  <Project Path="dotnet-api/dotnet-api.csproj" />
+  <Project Path="Shared/Shared.csproj" />
+</Solution>
