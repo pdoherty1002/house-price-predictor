@@ -13,7 +13,7 @@ Blazor front-end  →  ASP.NET Core API  →  FastAPI (Python)  →  scikit-lear
 - **FastAPI service** (`python-service`) — loads the trained model, validates and encodes incoming data to match the model's expected input, returns a prediction
 - **Shared** — a small shared class library so the `HouseFeatures` data shape has one single definition used by both `dotnet-api` and `blazor-app`, rather than being duplicated
 
-See `python-service/README.md` for details on the model itself, its features, and results.
+See [python-service/README.md](python-service/README.md) for details on the model itself, its features, and results.
 
 ## Running locally
 
